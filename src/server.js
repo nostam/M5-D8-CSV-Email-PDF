@@ -1,7 +1,7 @@
 const express = require("express");
 const listEndPoints = require("express-list-endpoints");
 const cors = require("cors");
-const attendees = requires("./services/attendees");
+const attendees = require("./services/attendees");
 const server = express();
 const port = process.env.PORT || 3001;
 
@@ -12,7 +12,6 @@ const {
   forbiddenHandler,
   catchAllHandler,
 } = require("./errorHandling");
-const { join } = require("path");
 
 const loggerMiddleware = (req, res, next) => {
   console.log(`Logged ${req.url} ${req.method} -- ${new Date()}`);
@@ -35,14 +34,16 @@ const corsOptions = {
 server.use(cors(corsOptions));
 server.use(express.json());
 server.use(loggerMiddleware);
+
 server.use("/attendees", attendees);
+
 server.use(badRequestHandler);
 server.use(notFoundHandler);
 server.use(unauthorizedHandler);
 server.use(forbiddenHandler);
 server.use(catchAllHandler);
 
-// console.log(listEndPoints(server));
+console.log(listEndPoints(server));
 
 server.listen(port, () => {
   if (process.env.NODE_ENV === "production") {
