@@ -22,8 +22,10 @@ const validationRules = [
 
 router.get("/", async (req, res, next) => {
   try {
-    const db = await readDB(attendeesJson);
-    res.send(db);
+    // const db = await readDB(attendeesJson);
+    // res.send(db);
+    mg();
+    res.send();
     // if (db.length > 0) {
     //   res.send(db);
     // } else {
@@ -56,8 +58,8 @@ router.post("/", validationRules, async (req, res, next) => {
       };
       db.push(newEntry);
       await writeDB(db, attendeesJson);
+      mg("Registered", JSON.stringify(newEntry));
       res.status(201).send({ id: newEntry.id });
-      await mg();
     }
   } catch (error) {
     console.log(error);
