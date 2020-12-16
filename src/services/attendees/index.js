@@ -22,10 +22,8 @@ const validationRules = [
 
 router.get("/", async (req, res, next) => {
   try {
-    // const db = await readDB(attendeesJson);
-    // res.send(db);
-    mg();
-    res.send();
+    const db = await readDB(attendeesJson);
+    res.send(db);
     // if (db.length > 0) {
     //   res.send(db);
     // } else {
