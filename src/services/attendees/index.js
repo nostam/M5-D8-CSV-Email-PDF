@@ -2,23 +2,10 @@ const express = require("express");
 const uniqid = require("uniqid");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
-const { writeDB, readDB, err } = require("../../lib");
+const { writeDB, readDB, err, mg } = require("../../lib");
 // const { writeFile } = require("fs-extra");
 const { join } = require("path");
-// const mailgun = require("mailgun-js");
-// const mg = mailgun({
-//   domain: process.env.MAIL_DOMAIN,
-//   apiKey: process.env.MAIL_API_KEY,
-// });
-const nodemailer = require("nodemailer");
-const mg = require("nodemailer-mailgun-transport");
-const mailAuth = {
-  auth: {
-    api_key: process.env.MAIL_API_KEY,
-    domain: process.env.MAIL_DOMAIN,
-  },
-};
-const nodemailerMailgun = nodemailer.createTransport(mg(mailAuth));
+
 // const { pipeline } = require("stream");
 // const zlib = require("zlib");
 // const multer = require("multer");
@@ -69,23 +56,8 @@ router.post("/", validationRules, async (req, res, next) => {
       };
       db.push(newEntry);
       await writeDB(db, attendeesJson);
-      const mailData = {
-        from: `postmaster@${process.env.MAIL_DOMAIN}`,
-        to: process.env.EMAIL_TO,
-        subject: "Hello World",
-        text: "test",
-      };
-      // mg.messages().send(mailData, (error, body) => {
-      //   console.log(body);
-      // });
-      nodemailerMailgun.sendMail(mailData, (err, info) => {
-        if (err) {
-          console.log(`Error: ${err}`);
-        } else {
-          console.log(`Response: ${info}`);
-        }
-      });
       res.status(201).send({ id: newEntry.id });
+      await mg();
     }
   } catch (error) {
     console.log(error);

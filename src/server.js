@@ -2,6 +2,7 @@ const express = require("express");
 const listEndPoints = require("express-list-endpoints");
 const cors = require("cors");
 const attendees = require("./services/attendees");
+const { mg } = require("./lib/");
 const server = express();
 const port = process.env.PORT || 3001;
 
@@ -21,6 +22,7 @@ const whiteList =
   process.env.NODE_ENV === "production"
     ? [process.env.FE_URL_PROD, process.env.FE_URL_PROD1]
     : [process.env.FE_URL_DEV];
+
 const corsOptions = {
   origin: function (origin, callback) {
     if (whiteList.indexOf(origin) !== -1) {
